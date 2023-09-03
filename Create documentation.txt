@@ -1,0 +1,297 @@
+For UserEndpoint.java
+
+package com.softserve.taf.services.placeholder.endpoints;
+
+import io.restassured.response.ValidatableResponse;
+import io.restassured.specification.RequestSpecification;
+import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import com.softserve.taf.models.enums.HttpStatus;
+import com.softserve.taf.models.placeholder.user.UserDto;
+import com.softserve.taf.services.common.AbstractWebEndpoint;
+
+/**
+ * UserEndpoint class to handle HTTP requests related to User resources.
+ */
+public class UserEndpoint extends AbstractWebEndpoint {
+
+    /**
+     * Logger instance for logging events.
+     */
+    private static final Logger LOGGER = LogManager.getLogger();
+
+    /**
+     * Constant for the users' endpoint.
+     */
+    private static final String USERS_END = "/users";
+
+    /**
+     * Constant for individual user resource.
+     */
+    private static final String USERS_RESOURCE_END = "/users/{userID}";
+
+    /**
+     * Constructor to initialize UserEndpoint with given RequestSpecification.
+     *
+     * @param specification The request specification to use for this endpoint.
+     */
+    public UserEndpoint(RequestSpecification specification) {
+        super(specification);
+    }
+
+    /**
+     * Create a new user.
+     *
+     * @param userDto The UserDto object containing user data.
+     * @return A UserDto object representing the created user.
+     */
+    public UserDto create(UserDto userDto) {
+        return create(userDto, HttpStatus.CREATED)
+            .extract().as(UserDto.class);
+    }
+
+    /**
+     * Create a new user with specific HttpStatus.
+     *
+     * @param userDto The UserDto object containing user data.
+     * @param status The expected HttpStatus code.
+     * @return A ValidatableResponse object containing the response details.
+     */
+    public ValidatableResponse create(UserDto userDto, HttpStatus status) {
+        LOGGER.info("Create new User");
+        return post(
+            this.specification,
+            USERS_END,
+            userDto)
+            .statusCode(status.getCode());
+    }
+
+    /**
+     * Update an existing user by ID.
+     *
+     * @param id The user ID to update.
+     * @param userDto The UserDto object containing new user data.
+     * @return A UserDto object representing the updated user.
+     */
+    public UserDto update(int id, UserDto userDto) {
+        return update(userDto, id, HttpStatus.OK)
+            .extract().as(UserDto.class);
+    }
+
+    /**
+     * Update an existing user by ID with specific HttpStatus.
+     *
+     * @param userDto The UserDto object containing new user data.
+     * @param id The user ID to update.
+     * @param status The expected HttpStatus code.
+     * @return A ValidatableResponse object containing the response details.
+     */
+    public ValidatableResponse update(UserDto userDto, int id, HttpStatus status) {
+        LOGGER.info("Update User by id [{}]", id);
+        return put(
+            this.specification,
+            USERS_RESOURCE_END,
+            userDto,
+            id)
+            .statusCode(status.getCode());
+    }
+
+    /**
+     * Retrieve a user by ID.
+     *
+     * @param id The user ID.
+     * @return A UserDto object representing the retrieved user.
+     */
+    public UserDto getById(String id) {
+        return getById(id, HttpStatus.OK)
+            .extract().as(UserDto.class);
+    }
+
+    /**
+     * Retrieve a user by ID with specific HttpStatus.
+     *
+     * @param id The user ID.
+     * @param status The expected HttpStatus code.
+     * @return A ValidatableResponse object containing the response details.
+     */
+    public ValidatableResponse getById(String id, HttpStatus status) {
+        LOGGER.info("Get User by id [{}]", id);
+        return get(
+            this.specification,
+            USERS_RESOURCE_END,
+            id)
+            .statusCode(status.getCode());
+    }
+
+    /**
+     * Retrieve all users.
+     *
+     * @return A list of UserDto objects representing all users.
+     */
+    public List<UserDto> getAll() {
+        return List.of(getAll(HttpStatus.OK).extract().as(UserDto[].class));
+    }
+
+    /**
+     * Retrieve all users with specific HttpStatus.
+     *
+     * @param status The expected HttpStatus code.
+     * @return A ValidatableResponse object containing the response details.
+     */
+    public ValidatableResponse getAll(HttpStatus status) {
+        LOGGER.info("Get all Users");
+        ValidatableResponse response = get(this.specification, USERS_END);
+        response.statusCode(status.getCode());
+        return response;
+    }
+}
+
+For CommentEndpoint.java
+
+package com.softserve.taf.services.placeholder.endpoints;
+
+import io.restassured.response.ValidatableResponse;
+import io.restassured.specification.RequestSpecification;
+import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import com.softserve.taf.models.enums.HttpStatus;
+import com.softserve.taf.models.placeholder.comment.CommentDto;
+import com.softserve.taf.services.common.AbstractWebEndpoint;
+
+/**
+ * CommentEndpoint class handles HTTP requests related to Comment resources.
+ */
+public class CommentEndpoint extends AbstractWebEndpoint {
+
+    /**
+     * Logger for logging events.
+     */
+    private static final Logger LOGGER = LogManager.getLogger();
+
+    /**
+     * Constant for the endpoint for comments.
+     */
+    private static final String COMMENTS_END = "/comments";
+
+    /**
+     * Constant for individual comment resource endpoint.
+     */
+    private static final String COMMENTS_RESOURCE_END = "/comments/{commentID}";
+
+    /**
+     * Constructor to initialize the CommentEndpoint with a given RequestSpecification.
+     *
+     * @param specification The RequestSpecification to use for this endpoint.
+     */
+    public CommentEndpoint(RequestSpecification specification) {
+        super(specification);
+    }
+
+    /**
+     * Create a new comment.
+     *
+     * @param commentDto The CommentDto object containing comment data.
+     * @return A CommentDto object representing the created comment.
+     */
+    public CommentDto create(CommentDto commentDto) {
+        return create(commentDto, HttpStatus.CREATED)
+            .extract().as(CommentDto.class);
+    }
+
+    /**
+     * Create a new comment with a specified HttpStatus.
+     *
+     * @param commentDto The CommentDto object containing comment data.
+     * @param status The expected HttpStatus code.
+     * @return A ValidatableResponse object containing the response details.
+     */
+    public ValidatableResponse create(CommentDto commentDto, HttpStatus status) {
+        LOGGER.info("Create new Comment");
+        return post(
+            this.specification,
+            COMMENTS_END,
+            commentDto)
+            .statusCode(status.getCode());
+    }
+
+    /**
+     * Update an existing comment by its ID.
+     *
+     * @param id The comment ID to update.
+     * @param commentDto The CommentDto object containing updated comment data.
+     * @return A CommentDto object representing the updated comment.
+     */
+    public CommentDto update(int id, CommentDto commentDto) {
+        return update(commentDto, id, HttpStatus.OK)
+            .extract().as(CommentDto.class);
+    }
+
+    /**
+     * Update an existing comment by its ID with a specified HttpStatus.
+     *
+     * @param commentDto The CommentDto object containing updated comment data.
+     * @param id The comment ID to update.
+     * @param status The expected HttpStatus code.
+     * @return A ValidatableResponse object containing the response details.
+     */
+    public ValidatableResponse update(CommentDto commentDto, int id, HttpStatus status) {
+        LOGGER.info("Update Comment by id [{}]", id);
+        return put(
+            this.specification,
+            COMMENTS_RESOURCE_END,
+            commentDto,
+            id)
+            .statusCode(status.getCode());
+    }
+
+    /**
+     * Retrieve a comment by its ID.
+     *
+     * @param id The comment ID.
+     * @return A CommentDto object representing the retrieved comment.
+     */
+    public CommentDto getById(int id) {
+        return getById(id, HttpStatus.OK)
+            .extract().as(CommentDto.class);
+    }
+
+    /**
+     * Retrieve a comment by its ID with a specified HttpStatus.
+     *
+     * @param id The comment ID.
+     * @param status The expected HttpStatus code.
+     * @return A ValidatableResponse object containing the response details.
+     */
+    public ValidatableResponse getById(int id, HttpStatus status) {
+        LOGGER.info("Get Comment by id [{}]", id);
+        return get(
+            this.specification,
+            COMMENTS_RESOURCE_END,
+            String.valueOf(id))
+            .statusCode(status.getCode());
+    }
+
+    /**
+     * Retrieve all comments.
+     *
+     * @return A list of CommentDto objects representing all comments.
+     */
+    public List<CommentDto> getAll() {
+        return List.of(getAll(HttpStatus.OK).extract().as(CommentDto[].class));
+    }
+
+    /**
+     * Retrieve all comments with a specified HttpStatus.
+     *
+     * @param status The expected HttpStatus code.
+     * @return A ValidatableResponse object containing the response details.
+     */
+    public ValidatableResponse getAll(HttpStatus status) {
+        LOGGER.info("Get all Comments");
+        ValidatableResponse response = get(this.specification, COMMENTS_END);
+        response.statusCode(status.getCode());
+        return response;
+    }
+}
